@@ -1,9 +1,15 @@
 #!/bin/bash
 
+#COMP2137 Linux Automation
+#DATE Feb 12-13, 2025
+#Prof. Dennis simpson
+#Script prepared by Prashant Kumar Sah
+
+
 #To get the logged in user information
 USER=$(whoami)
 
-#System Information
+#Getting System Information
 
 #To generate hostname
 HOSTNAME=$(hostname)
@@ -13,6 +19,8 @@ OS=$(source /etc/os-release && echo $NAME && echo $VERSION)
 
 #To get the system uptime
 UPTIME=$(uptime -p)
+
+#Getting Hardware Information
 
 #To get the cpu processor make and model information
 CPU_INFORMATION=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | sed 's/.*: //')
@@ -25,6 +33,12 @@ DISKS=$(sudo lshw -class disk -short | awk '/disk/ {printf "Make: %s Model: %s S
 
 #Getting the make and model of video card
 VIDEO_CARD=$(lspci | grep -i vga | awk '{$1="";$2=""; print $0}')
+
+#Collecting Network Information 
+
+#
+
+
 
 #The output report directly to the terminal
 cat <<EOF
@@ -44,6 +58,13 @@ Hardware Information
     Ram: $RAM
 Disk(s):$DISKS
 Video: $VIDEO_CARD
+
+Network Information
+-------------------
+FQDN: $FQDN
+Host Address: $HOST_ADDRESS 
+Gateway IP: $GATEWAY_IP 
+DNS Server: $DNS_SERVER
 
 
 
