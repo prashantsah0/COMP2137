@@ -36,8 +36,37 @@ VIDEO_CARD=$(lspci | grep -i vga | awk '{$1="";$2=""; print $0}')
 
 #Collecting Network Information 
 
-#
+#To get the fully qualified domain name
+FQDN=$(hostname -f)
 
+#To get the host ip address for the interface that is connected to the default gateway
+HOST_ADDRESS=$(hostname -I)
+
+#Getting default gateway address
+GATEWAY_IP=$(ip route | grep default | awk '{print $3}')
+
+#To get the DNS server
+DNS_SERVER=$(grep nameserver /etc/resolv.conf | awk '{print $2}')
+
+#Collecting system Status
+
+#To get the logged in users
+USERS=$(who | awk '{print $1}' | paste -sd, -)
+
+#To get the free disk space information
+DISK_SPACE=$(df -h --output=target,avail | grep -E '^/dev' | awk '{print $1, $2}')
+
+#To get the count of total number of running processes
+PROCESS_COUNT=$( ps -e | tail -n +2 | wc -l)
+
+#To get the load averages
+LOAD_AVERAGES=$(uptime | awk '{print $10 "," $11 "," $12}')
+
+#To get the total number of listening networks ports
+LISTENING_NETWORK_PORT=$(sudo netstat -tuln | awk 'NR > 2 {print $4}' | cut -d: -f2 | tr '\n' ',' | sed 's/,$/\n/')
+
+#To check the UFW status whether it is enabled or disabled
+UFW_STATUS=$(sudo ufw status | awk 'NR==1 {print $2}')
 
 
 #The output report directly to the terminal
@@ -65,6 +94,15 @@ FQDN: $FQDN
 Host Address: $HOST_ADDRESS 
 Gateway IP: $GATEWAY_IP 
 DNS Server: $DNS_SERVER
+
+System Status
+--------------
+Users Logged In: $USERS
+Disk Space: $DISK_SPACE
+Process Count: $PROCESS_COUNT
+Load Averages: $LOAD_AVERAGES
+Listening Network Ports: $LISTENING_NETWORK_PORTS
+UFW STATUS: $UFW_STATUS
 
 
 
